@@ -42,7 +42,7 @@ rule16 = B.in_order_to(A)
 rule17 = in_order_to(A).must(B)
 rule18 = when(A).then(-B)
 
-selection_rules = (rule18, )
+selection_rules = (rule12, rule18 )
 
 def group_size_rule3(possibility):
     return len(possibility) == 2
@@ -72,8 +72,14 @@ for office1_possibility in office1_possibilities:
             possibility = (office1,office2,office3) 
             possibilities.append(possibility)
 
-print(f"possibility #1: {possibilities[0]}")
+
 possiblity1_is_solution, message = Grouping.is_solution(possibilities[0], group_size_rules, selection_rules)
+solutions = Grouping.solve(possibilities, group_size_rules, selection_rules)
+print("solutions found")
+for solution in solutions:
+    print(solution)
+
+print(f"possibility #1: {possibilities[0]}")
 print(possiblity1_is_solution)
 print(message)
 

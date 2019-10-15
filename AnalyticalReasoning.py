@@ -9,6 +9,14 @@ class Grouping:
     def solve(selection_pool, group_size_rules, rules):
         pass
     
+    def solve(possibilities, group_size_rules, rules):
+        solutions = []
+        for possibility in possibilities:
+            is_solution, message = Grouping.is_solution(possibility, group_size_rules, rules)
+            if is_solution:
+                solutions.append(possibility)
+        return solutions
+    
     # TODO : add to rules.py
     def check(rules, possibilities):
         solutions = possibilities.copy()
