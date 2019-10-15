@@ -44,10 +44,13 @@ rule18 = when(A).then(-B)
 
 selection_rules = (rule18, )
 
-group_size_rule1 = lambda possibility: [2,2,2] == sorted([len(p) for p in possibility], reverse = True)
-group_size_rule2 = lambda possibility: len(possibility) == 2
+def group_size_rule3(possibility):
+    return len(possibility) == 2
 
-group_size_rules = (group_size_rule1, group_size_rule2)
+group_size_rule1 = lambda possibility: [2,2,2] == sorted([len(p) for p in possibility], reverse = True)
+group_size_rule2 = lambda possibility: len(possibility) == 3
+
+group_size_rules = (group_size_rule1, group_size_rule2, )
 
 pool = set((A, B, C, D, E, F, G, H, I))
 
@@ -56,7 +59,6 @@ possibilities = []
 office1_possibilities = set(it.combinations(pool, 2))
 office2_possibilities = None
 office3_possibilities = None
-#print(f"office #1 pool: {office1_pool}")
 for office1_possibility in office1_possibilities:
     office1 = set(office1_possibility)
     office2_pool = pool - office1
@@ -71,5 +73,7 @@ for office1_possibility in office1_possibilities:
             possibilities.append(possibility)
 
 print(f"possibility #1: {possibilities[0]}")
-solutions = Grouping.is_solution(possibilities[0], group_size_rules, selection_rules)
-print(solutions)
+possiblity1_is_solution, message = Grouping.is_solution(possibilities[0], group_size_rules, selection_rules)
+print(possiblity1_is_solution)
+print(message)
+

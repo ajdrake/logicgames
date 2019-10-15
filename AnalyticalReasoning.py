@@ -6,10 +6,9 @@ Created on Mon Oct 14 14:39:02 2019
 """
 
 class Grouping:
-    def solve(selection_pool, rules):
+    def solve(selection_pool, group_size_rules, rules):
         pass
     
-
     # TODO : add to rules.py
     def check(rules, possibilities):
         solutions = possibilities.copy()
@@ -21,12 +20,13 @@ class Grouping:
     def is_solution(possibility, group_size_rules, selection_rules):
         for group_size_rule in group_size_rules:
             if not group_size_rule(possibility):
-                return False
+                return False, f"failed group size rule: {group_size_rule}"
         for group in possibility:
             for rule in selection_rules:
                 if not rule(group):
-                    return False
-
+                    return False, f"failed selection size rule: {rule}"
+            
+        return True, f"{possibility} is a solution"
 class Variable:
     selected = True
     subgroups = []
@@ -53,7 +53,7 @@ class Variable:
     
     # necessary condition indicators words
     def is_necessary(self, var):
-        return lambda group: self in group if var in group else True # should return True of False in else condition?
+        return True#lambda group: self in group if var in group else True # should return True of False in else condition?
     
     def when(self, var):
         return self.is_necessary(var)
@@ -78,7 +78,7 @@ class Variable:
     
     # sufficient condition indicator words
     def is_sufficient(self, var):
-        return lambda group: var in group if self in group else True
+        return lambda group: ( var in group if var.selected else var not in group ) if ( self in group if self.selected else self not in group ) else True
     
     def then(self, var):
         return self.is_sufficient(var)
