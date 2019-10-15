@@ -5,10 +5,30 @@ Created on Mon Oct 14 14:39:02 2019
 @author: aaron.drake
 """
 
-class SelectionPool:
-    pass
+class Grouping:
+    def solve(selection_pool, rules):
+        pass
+    
+
+    # TODO : add to rules.py
+    def check(rules, possibilities):
+        solutions = possibilities.copy()
+        for rule in rules:
+            for possibility in possibilities:
+                if not rule(possibility) and possibility in solutions:
+                    solutions.remove(possibility)
+
+    def is_solution(possibility, group_size_rules, selection_rules):
+        for group_size_rule in group_size_rules:
+            if not group_size_rule(possibility):
+                return False
+        for group in possibility:
+            for rule in selection_rules:
+                if not rule(group):
+                    return False
 
 class Variable:
+    selected = True
     subgroups = []
     
     def __init__(self,label):  
@@ -20,6 +40,16 @@ class Variable:
     def __str__(self):
         return self.label
     
+    def __eq__(self,obj):
+        return self.label == obj.label
+    
+    def __hash__(self):
+        return hash(self.label)
+    
+    def __neg__(self):
+        val = Variable(self.label)
+        val.selected = not self.selected
+        return val
     
     # necessary condition indicators words
     def is_necessary(self, var):

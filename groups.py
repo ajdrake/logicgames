@@ -6,8 +6,9 @@ Created on Mon Oct 14 13:42:43 2019
 """
 
 import itertools as it
-from variable import Variable
-from variable import *
+from AnalyticalReasoning import Variable
+from AnalyticalReasoning import Grouping
+from AnalyticalReasoning import *
 A = Variable("A")
 B = Variable("B")
 C = Variable("C")
@@ -39,24 +40,22 @@ rule14 = B.when(A)
 rule15 = B.every(A)
 rule16 = B.in_order_to(A)
 rule17 = in_order_to(A).must(B)
+rule18 = when(A).then(-B)
 
-rules = (rule2, )
+selection_rules = (rule18, )
 
-# TODO : add to rules.py
-def check(rules, possibilities):
-    solutions = possibilities.copy()
-    for rule in rules:
-        for possibility in possibilities:
-            if not rule(possibility) and possibility in solutions:
-                solutions.remove(possibility)
+group_size_rule1 = lambda possibility: [2,2,2] == sorted([len(p) for p in possibility], reverse = True)
+group_size_rule2 = lambda possibility: len(possibility) == 2
+
+group_size_rules = (group_size_rule1, group_size_rule2)
 
 pool = set((A, B, C, D, E, F, G, H, I))
 
-possibilies = []
+possibilities = []
 
 office1_possibilities = set(it.combinations(pool, 2))
-office2_possibilities = set()
-office3_possibilities = set()
+office2_possibilities = None
+office3_possibilities = None
 #print(f"office #1 pool: {office1_pool}")
 for office1_possibility in office1_possibilities:
     office1 = set(office1_possibility)
@@ -69,28 +68,8 @@ for office1_possibility in office1_possibilities:
         for office3_possibility in office3_possibilities:
             office3 = set(office3_possibility)
             possibility = (office1,office2,office3) 
-            possibilies.append(possibility)
+            possibilities.append(possibility)
 
-print(f"possibilities: {possibilies}")
-solutions = check(rules, possibilies)
+print(f"possibility #1: {possibilities[0]}")
+solutions = Grouping.is_solution(possibilities[0], group_size_rules, selection_rules)
 print(solutions)
-
-
-#    print(rule1(possibility))
-#    print(rule2(possibility))
-#    print(rule3(possibility))
-#    print(rule4(possibility))
-#    print(rule5(possibility))
-#    print(rule6(possibility))
-#    print(rule7(possibility))
-#    print(rule8(possibility))
-#    print(rule9(possibility))
-#    print(rule10(possibility))
-#    print(rule11(possibility))
-#    print(rule12(possibility))
-#    print(rule13(possibility))
-#    print(rule14(possibility))
-#    print(rule15(possibility))
-#    print(rule16(possibility))
-#    print(rule17(possibility))
-#    
