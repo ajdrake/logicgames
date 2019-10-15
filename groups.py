@@ -42,7 +42,18 @@ rule16 = B.in_order_to(A)
 rule17 = in_order_to(A).must(B)
 rule18 = when(A).then(-B)
 
-selection_rules = (rule12, rule18 )
+
+rule19 = D.then(-E)
+rule20 = D.then(-I)
+rule21 = D.then(-C)
+rule22 = D.then(-F)
+rule23 = D.then(-B)
+rule24 = D.then(-H)
+rule25 = D.then(-G)
+rule26 = D.then(-A)
+rule27 = select(-A)
+
+selection_rules = (rule19, rule20, rule21,rule22, rule23, rule24, rule25, rule26, rule27)
 
 def group_size_rule3(possibility):
     return len(possibility) == 2

@@ -141,3 +141,6 @@ def people_who(var):
 
 def in_order_to(var):
     return is_necessary(var)
+
+def select(var):
+    return lambda group: ( var in group if var.selected else var not in group )
