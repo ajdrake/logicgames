@@ -4,7 +4,8 @@ Created on Mon Oct 14 13:42:43 2019
 
 @author: aaron.drake
 """
-
+import random
+import numpy as np
 import itertools as it
 from AnalyticalReasoning import Variable
 from AnalyticalReasoning import Grouping
@@ -53,44 +54,47 @@ rule25 = D.then(-G)
 rule26 = D.then(-A)
 rule27 = select(-A)
 
-selection_rules = (rule19, rule20, rule21,rule22, rule23, rule24, rule25, rule26, rule27)
+selection_rules = (rule26,rule25,rule24,rule23, rule20, rule21)
 
 def group_size_rule3(possibility):
     return len(possibility) == 2
 
-group_size_rule1 = lambda possibility: [2,2,2] == sorted([len(p) for p in possibility], reverse = True)
+group_size_rule1 = lambda possibility: [3,3,3] == sorted([len(p) for p in possibility], reverse = True)
 group_size_rule2 = lambda possibility: len(possibility) == 3
 
 group_size_rules = (group_size_rule1, group_size_rule2, )
 
-pool = set((A, B, C, D, E, F, G, H, I))
+pool = (A, B, C, D, E, F, G, H, I)
 
-possibilities = []
+#possibilities = []
+#
+#office1_possibilities = set(it.combinations(pool, 3))
+#office2_possibilities = None
+#office3_possibilities = None
+#
+#
+#for office1_possibility in office1_possibilities:
+#    office1 = set(office1_possibility)
+#    office2_pool = pool - office1
+#    office2_possibilities = set(it.combinations(office2_pool, 3))
+#    for office2_possibility in office2_possibilities:
+#        office2 = set(office2_possibility)
+#        office3_pool = office2_pool - office2
+#        office3_possibilities = set(it.combinations(office3_pool, 3))
+#        for office3_possibility in office3_possibilities:
+#            office3 = set(office3_possibility)
+#            possibility = (office1,office2,office3) 
+#            possibilities.append(possibility)
 
-office1_possibilities = set(it.combinations(pool, 2))
-office2_possibilities = None
-office3_possibilities = None
-for office1_possibility in office1_possibilities:
-    office1 = set(office1_possibility)
-    office2_pool = pool - office1
-    office2_possibilities = set(it.combinations(office2_pool, 2))
-    for office2_possibility in office2_possibilities:
-        office2 = set(office2_possibility)
-        office3_pool = office2_pool - office2
-        office3_possibilities = set(it.combinations(office3_pool, 2))
-        for office3_possibility in office3_possibilities:
-            office3 = set(office3_possibility)
-            possibility = (office1,office2,office3) 
-            possibilities.append(possibility)
 
-
-possiblity1_is_solution, message = Grouping.is_solution(possibilities[0], group_size_rules, selection_rules)
-solutions = Grouping.solve(possibilities, group_size_rules, selection_rules)
+gen_poss = Grouping.generate_possibilities(pool, group_sizes=(3,3,3), num_selected=9)
+possiblity1_is_solution, message = Grouping.is_solution(gen_poss[0], group_size_rules, selection_rules)
+solutions = Grouping.solve(gen_poss, group_size_rules, selection_rules)
 print("solutions found")
 for solution in solutions:
     print(solution)
 
-print(f"possibility #1: {possibilities[0]}")
+print(f"possibility #1: {gen_poss[0]}")
 print(possiblity1_is_solution)
 print(message)
 

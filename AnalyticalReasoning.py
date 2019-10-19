@@ -5,6 +5,39 @@ Created on Mon Oct 14 14:39:02 2019
 @author: aaron.drake
 """
 
+import itertools as it
+import more_itertools as m_it
+
+def is_necessary(var):
+    return var
+
+def when(var):
+    return is_necessary(var)
+
+def whenever(var):
+    return is_necessary(var)
+
+def every(var):
+    return is_necessary(var)
+
+def all_(var):
+    return is_necessary(var)
+
+def any_(var):
+    return is_necessary(var)
+
+def people_who(var):
+    return is_necessary(var)
+
+def in_order_to(var):
+    return is_necessary(var)
+
+def select(var):
+    return lambda group: is_selected(var, group)
+
+def is_selected(var, group):
+    return var in group if var.selected else var not in group
+
 class Grouping:
     def solve(selection_pool, group_size_rules, rules):
         pass
@@ -13,18 +46,41 @@ class Grouping:
         solutions = []
         for possibility in possibilities:
             is_solution, message = Grouping.is_solution(possibility, group_size_rules, rules)
-            if is_solution:
+            if is_solution and possibility not in solutions:
                 solutions.append(possibility)
         return solutions
     
-    # TODO : add to rules.py
-    def check(rules, possibilities):
-        solutions = possibilities.copy()
-        for rule in rules:
-            for possibility in possibilities:
-                if not rule(possibility) and possibility in solutions:
-                    solutions.remove(possibility)
-
+    def split(iterable, group_sizes, indices):
+        pool = tuple(iterable)
+        n = len(pool)
+        groups = []
+        start = 0
+        for size in group_sizes:
+            groups.append(set([pool[i] for i in indices[start:start + size]]))
+            start = start + size
+        return groups
+    
+    def check_sizes(group, sizes):
+        if len(group) != len(sizes):
+            return False
+        for i in range(len(sizes)):
+            if len(group[i]) != sizes[i]:
+                return False
+        return True
+              
+    def split(selection_pool, group_sizes):
+        groups = [item for item in m_it.set_partitions(selection_pool) if Grouping.check_sizes(item, group_sizes)]
+        return list(map(tuple, groups))
+    
+    def generate_possibilities(pool, group_sizes, num_selected):
+        # establish the distributions
+        dist = group_sizes
+        if group_sizes == None:
+            dist = [num_selected - len(group_names) + 1]
+            dist = np.append(arr=dist, values=np.ones(len(group_names)-1, dtype=int))
+        possibilities = Grouping.split(pool, group_sizes)
+        return possibilities
+    
     def is_solution(possibility, group_size_rules, selection_rules):
         for group_size_rule in group_size_rules:
             if not group_size_rule(possibility):
@@ -35,6 +91,7 @@ class Grouping:
                     return False, f"failed selection size rule: {rule}"
             
         return True, f"{possibility} is a solution"
+
 class Variable:
     selected = True
     subgroups = []
@@ -86,7 +143,7 @@ class Variable:
     
     # sufficient condition indicator words
     def is_sufficient(self, var):
-        return lambda group: ( var in group if var.selected else var not in group ) if ( self in group if self.selected else self not in group ) else True
+        return lambda group: is_selected(var, group)  if is_selected(self, group) else True
     
     def then(self, var):
         return self.is_sufficient(var)
@@ -118,29 +175,3 @@ class Variable:
     def without(self, var):
         return self.is_sufficient(var)
     
-def is_necessary(var):
-    return var
-
-def when(var):
-    return is_necessary(var)
-
-def whenever(var):
-    return is_necessary(var)
-
-def every(var):
-    return is_necessary(var)
-
-def all_(var):
-    return is_necessary(var)
-
-def any_(var):
-    return is_necessary(var)
-
-def people_who(var):
-    return is_necessary(var)
-
-def in_order_to(var):
-    return is_necessary(var)
-
-def select(var):
-    return lambda group: ( var in group if var.selected else var not in group )
