@@ -49,16 +49,7 @@ class Grouping:
             if is_solution and possibility not in solutions:
                 solutions.append(possibility)
         return solutions
-    
-    def split(iterable, group_sizes, indices):
-        pool = tuple(iterable)
-        n = len(pool)
-        groups = []
-        start = 0
-        for size in group_sizes:
-            groups.append(set([pool[i] for i in indices[start:start + size]]))
-            start = start + size
-        return groups
+
     
     def check_sizes(group, sizes):
         if len(group) != len(sizes):
@@ -69,15 +60,14 @@ class Grouping:
         return True
               
     def split(selection_pool, group_sizes):
-        groups = [item for item in m_it.set_partitions(selection_pool) if Grouping.check_sizes(item, group_sizes)]
-        return list(map(tuple, groups))
+        distinct_sets = []
+        for perm in it.permutations(selection_pool):
+            sets = [set(s) for s in m_it.split_into(perm, group_sizes)]
+            if(sets not in distinct_sets):
+                distinct_sets.append(sets)
+        return distinct_sets
     
     def generate_possibilities(pool, group_sizes, num_selected):
-        # establish the distributions
-        dist = group_sizes
-        if group_sizes == None:
-            dist = [num_selected - len(group_names) + 1]
-            dist = np.append(arr=dist, values=np.ones(len(group_names)-1, dtype=int))
         possibilities = Grouping.split(pool, group_sizes)
         return possibilities
     

@@ -59,9 +59,14 @@ selection_rules = (rule26,rule25,rule24,rule23, rule20, rule21)
 def group_size_rule3(possibility):
     return len(possibility) == 2
 
-group_size_rule1 = lambda possibility: [3,3,3] == sorted([len(p) for p in possibility], reverse = True)
+group_size_rule1 = lambda possibility: [7,1,1] == sorted([len(p) for p in possibility], reverse = True)
 group_size_rule2 = lambda possibility: len(possibility) == 3
 
+groups = []
+groups.append(numpy.empty(7, dtype=object))
+groups.append(numpy.empty(1, dtype=object))
+groups.append(numpy.empty(1, dtype=object))
+                                          
 group_size_rules = (group_size_rule1, group_size_rule2, )
 
 pool = (A, B, C, D, E, F, G, H, I)
@@ -87,14 +92,15 @@ pool = (A, B, C, D, E, F, G, H, I)
 #            possibilities.append(possibility)
 
 
-gen_poss = Grouping.generate_possibilities(pool, group_sizes=(3,3,3), num_selected=9)
-possiblity1_is_solution, message = Grouping.is_solution(gen_poss[0], group_size_rules, selection_rules)
+gen_poss = Grouping.generate_possibilities(pool, [7,1,1], num_selected=9)
+print(gen_poss)
+#possiblity1_is_solution, message = Grouping.is_solution(gen_poss[0], group_size_rules, selection_rules)
 solutions = Grouping.solve(gen_poss, group_size_rules, selection_rules)
 print("solutions found")
 for solution in solutions:
     print(solution)
 
-print(f"possibility #1: {gen_poss[0]}")
-print(possiblity1_is_solution)
-print(message)
+#print(f"possibility #1: {gen_poss[0]}")
+#print(possiblity1_is_solution)
+#print(message)
 
